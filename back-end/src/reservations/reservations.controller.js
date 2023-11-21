@@ -26,20 +26,31 @@ const hasRequiredProperties = hasProperties(
 //only has properties from VALID array
 function hasOnlyValidProperties(req, res, next) {
   const { data = {} } = req.body;
-  const arrayOfFields = Object.keys(data);
-
-  const invalidFields = arrayOfFields.filter(
+  const invalidFields = Object.keys(data).filter(
     (field) => !VALID_PROPERTIES.includes(field)
   );
   if (invalidFields.length) {
     return next({
       status: 400,
-      message: `Invalid field(s): ${invalidFields.join(", ")}`,
+      message: `Invalid field(s): ${invalidFields.join(", ")}.`,
     });
   }
   next();
 }
+//reservation_id exists
+async function reservationExists(req, res, next) {
+  const { reservation_id } = req.params;
+  const reservation = await service.read(reservation_id);
 
+  if (reservation) {
+    res.locals.reservation = reservation;
+    return next();
+  }
+  next({
+    status: 404,
+    message: `Reservation ${reservation_id} cannot be found.`,
+  });
+}
 //check if time is real: btw 01:00 and 24:59 (military time)
 function validateTime(str) {
   const [hour, minute] = str.split(":");
@@ -66,7 +77,7 @@ function validateTimeField(req, res, next) {
       if (!validateTime(data[field])) {
         return next({
           status: 400,
-          message: `${"reservation_time"} is not a valid time`,
+          message: `${"reservation_time"} is not a valid time.`,
         });
       }
     }
@@ -80,7 +91,7 @@ function validateDateField(req, res, next) {
       if (!Date.parse(data[field])) {
         return next({
           status: 400,
-          message: `${"reservation_date"} is not a valid date`,
+          message: `${"reservation_date"} is not a valid date.`,
         });
       }
     }
@@ -95,27 +106,41 @@ function validatePeopleField(req, res, next) {
       if (!isNumber || Number(data[field]) < 0) {
         return next({
           status: 400,
-          message: `${"people"} is not a valid number greater than zero`,
+          message: `${"people"} is not a valid number greater than zero.`,
         });
       }
     }
   });
   next();
 }
+// date.getDay(): (Sunday is 0 and Saturday is 6).
+function validateNotOnTuesday(req, res, next) {
+  const { reservation_date } = req.body.data;
+  const [year, month, day] = reservation_date.split("-");
 
-//reservation_id exists
-async function reservationExists(req, res, next) {
-  const { reservation_id } = req.params;
-  const reservation = await service.read(reservation_id);
-
-  if (reservation) {
-    res.locals.reservation = reservation;
-    return next();
+  const resDate = new Date(`${month} ${day}, ${year}`);
+  if (resDate.getDay() === 2) {
+    return next({
+      status: 400,
+      message: "Restaurant is closed on Tuesdays.",
+    });
   }
-  next({
-    status: 404,
-    message: `Reservation ${reservation_id} cannot be found.`,
-  });
+  next();
+}
+function validateInTheFuture(req, res, next) {
+  const { reservation_date } = req.body.data;
+  const [year, month, day] = reservation_date.split("-");
+
+  const resDate = new Date(`${month} ${day}, ${year}`);
+  const today = new Date();
+
+  if (resDate < today) {
+    return next({
+      status: 400,
+      message: "Only future reservations are allowed.",
+    });
+  }
+  next();
 }
 
 async function list(req, res) {
@@ -123,8 +148,7 @@ async function list(req, res) {
   if (reservation_date) {
     const data = await service.listReservationsByDate(reservation_date);
     res.status(200).json({ data });
-  }
-  else {
+  } else {
     const data = await service.list();
     res.status(200).json({ data });
   }
@@ -147,6 +171,8 @@ module.exports = {
     validateTimeField,
     validatePeopleField,
     validateDateField,
+    validateNotOnTuesday,
+    validateInTheFuture,
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationExists), read],
