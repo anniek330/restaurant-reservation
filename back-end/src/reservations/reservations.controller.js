@@ -51,7 +51,7 @@ async function reservationExists(req, res, next) {
     message: `Reservation ${reservation_id} cannot be found.`,
   });
 }
-//check if time is real: btw 01:00 and 24:59 (military time)
+//check if time is real: btw 10:30 and 21:30 (9:30 pm) 
 function validateTime(str) {
   const [hour, minute] = str.split(":");
 
@@ -61,10 +61,16 @@ function validateTime(str) {
   const hourAsInt = Number(hour);
   const minuteAsInt = Number(minute);
 
-  if (hourAsInt < 1 || hourAsInt > 23) {
+  if (hourAsInt < 10 || hourAsInt > 21) {
     return false;
   }
   if (minuteAsInt < 0 || minuteAsInt > 59) {
+    return false;
+  }
+  if (hourAsInt === 21 && minuteAsInt > 30) {
+    return false;
+  }
+  if (hourAsInt === 10 && minuteAsInt < 30) {
     return false;
   }
   return true;
