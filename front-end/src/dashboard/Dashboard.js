@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
+
 import { useHistory } from "react-router-dom";
 import { previous, next } from "../utils/date-time";
 import ReservationList from "./ReservationList";
@@ -40,14 +41,15 @@ function Dashboard({ date }) {
     const nextDate = next(date);
     history.push(`/dashboard?date=${nextDate}`);
   }
+  console.log(reservations)
   return (
     <main>
       <h1>Dashboard</h1>
-
       <div className="d-md-flex mb-3">
         <h4 className="mb-0">Reservations for {date}</h4>
       </div>
-
+      {JSON.stringify(reservations)}
+      
       <ErrorAlert error={reservationsError} />
       <div>
         <button type="button" onClick={handlePrevButton}>
@@ -60,14 +62,13 @@ function Dashboard({ date }) {
           Next
         </button>
       </div>
-
-      <ReservationList
+      {/* <ReservationList
         reservations={reservations}
         setReservations={setReservations}
         setError={setReservationsError}
-      />
+      /> */}
     </main>
-  )
+  );
 }
 
 export default Dashboard;

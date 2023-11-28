@@ -2,6 +2,7 @@ import React from "react";
 //import { cancelReservation } from "../utils/api";
 
 function ReservationList({ reservations, setReservations, setError }) {
+  console.log(reservations)
   // function handleResCancel(reservation_id) {
   //   const confirmed = window.confirm(
   //     "Delete this reservation?\n\nYou will not be able to recover it."
