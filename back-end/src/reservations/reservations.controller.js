@@ -150,9 +150,9 @@ function validateInTheFuture(req, res, next) {
 }
 
 async function list(req, res) {
-  const { reservation_date } = req.query;
-  if (reservation_date) {
-    const data = await service.listReservationsByDate(reservation_date);
+  const { date } = req.query;
+  if (date) {
+    const data = await service.listReservationsByDate(date);
     res.status(200).json({ data });
   } else {
     const data = await service.list();

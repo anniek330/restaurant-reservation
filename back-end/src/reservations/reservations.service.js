@@ -3,7 +3,7 @@ const knex = require("../db/connection");
 function list() {
   return knex("reservations")
     .select("*")
-    .orderBy("reservations.reservation_time");
+    .orderBy("reservations.reservation_date");
 }
 
 //"returns only reservations matching date query parameter" sorted by time (earliest time first)"
@@ -11,7 +11,7 @@ function listReservationsByDate(reservation_date) {
   return knex("reservations")
     .select("*")
     .where( {reservation_date})
-    .orderBy("reservations.reservations_time");
+    .orderBy("reservation_time");
 }
 function create(reservation) {
   return knex("reservations")
