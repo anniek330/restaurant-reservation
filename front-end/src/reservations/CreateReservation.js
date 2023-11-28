@@ -1,11 +1,9 @@
-import React,{useState} from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
 import Form from "./Form";
 import { createReservation } from "../utils/api";
 
-
 function CreateReservation() {
-
   const initialFormData = {
     first_name: "",
     last_name: "",
@@ -15,7 +13,7 @@ function CreateReservation() {
     reservation_time: "",
   };
 
-const history = useHistory();
+  const history = useHistory();
 
   function handleCancelClick() {
     history.goBack(); // cancel button redirects to previous page
