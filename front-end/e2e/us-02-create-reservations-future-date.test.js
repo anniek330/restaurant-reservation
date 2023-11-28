@@ -11,7 +11,7 @@ const onPageConsole = (msg) =>
   );
 
 describe("US-02 - Create reservation on a future, working date - E2E", () => {
-  let page;
+  let page; 
   let browser;
 
   beforeAll(async () => {
