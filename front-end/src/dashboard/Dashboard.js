@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
+import { useHistory } from "react-router-dom";
+import { previous, next } from "../utils/date-time";
+import ReservationList from "./ReservationList";
 
 /**
  * Defines the dashboard page.
@@ -11,9 +14,11 @@ import ErrorAlert from "../layout/ErrorAlert";
 function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
+  const history = useHistory();
 
   useEffect(loadDashboard, [date]);
 
+  //get reservations from database
   function loadDashboard() {
     const abortController = new AbortController();
     setReservationsError(null);
@@ -23,16 +28,46 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   }
 
+  function handlePrevButton() {
+    const prevDate = previous(date);
+    history.push(`/dashboard?date=${prevDate}`);
+  }
+  function handleTodayButton() {
+    history.push(`/dashboard`);
+  }
+
+  function handleNextButton() {
+    const nextDate = next(date);
+    history.push(`/dashboard?date=${nextDate}`);
+  }
   return (
     <main>
       <h1>Dashboard</h1>
+
       <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for date</h4>
+        <h4 className="mb-0">Reservations for {date}</h4>
       </div>
+
       <ErrorAlert error={reservationsError} />
-      {JSON.stringify(reservations)}
+      <div>
+        <button type="button" onClick={handlePrevButton}>
+          Previous
+        </button>
+        <button type="button" onClick={handleTodayButton}>
+          Today
+        </button>
+        <button type="button" onClick={handleNextButton}>
+          Next
+        </button>
+      </div>
+
+      <ReservationList
+        reservations={reservations}
+        setReservations={setReservations}
+        setError={setReservationsError}
+      />
     </main>
-  );
+  )
 }
 
 export default Dashboard;

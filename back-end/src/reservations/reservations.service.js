@@ -9,7 +9,8 @@ function list() {
 //"returns only reservations matching date query parameter" sorted by time (earliest time first)"
 function listReservationsByDate(reservation_date) {
   return knex("reservations")
-    .where({ reservation_date })
+    .select("*")
+    .where({reservation_date})
     .orderBy("reservation_time");
 }
 
