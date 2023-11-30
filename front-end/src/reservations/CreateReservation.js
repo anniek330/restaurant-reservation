@@ -3,16 +3,17 @@ import { useHistory } from "react-router-dom";
 import Form from "./Form";
 import { createReservation } from "../utils/api";
 
+
+
 function CreateReservation() {
   const initialFormData = {
     first_name: "",
     last_name: "",
     mobile_number: "",
-    people: 0,
+    people: 1,
     reservation_date: "",
     reservation_time: "",
   };
-
   const history = useHistory();
 
   function handleCancelClick() {
@@ -36,3 +37,4 @@ function CreateReservation() {
 }
 
 export default CreateReservation;
+

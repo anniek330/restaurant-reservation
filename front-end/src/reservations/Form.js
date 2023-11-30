@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
 import ErrorAlert from "../layout/ErrorAlert";
+import { createReservation } from "../utils/api";
 
 function Form({ onSubmit, onCancel, initialFormData }) {
   const history = useHistory();
   const [formData, setFormData] = useState({ ...initialFormData });
-  const [reservationsError, setReservationsError] = useState(null);
+  const [reservationError, setReservationError] = useState(null);
 
   //console.log(initialFormData);
 
@@ -19,17 +20,17 @@ function Form({ onSubmit, onCancel, initialFormData }) {
   //submit handler for each reservation:
   function handleSubmit(event) {
     event.preventDefault();
-    onSubmit(formData)
-      //return to home page
+    createReservation(formData)
+      //return to home page on res date
       .then(() => {
-        history.push("/");
+        history.push(`/dashboard?date=${formData.reservation_date}`);
       })
-      .catch(setReservationsError);
+      .catch(setReservationError);
   }
-
+  
   return (
     <div>
-      <ErrorAlert error={reservationsError} />
+      <ErrorAlert error={reservationError} />
       <form onSubmit={handleSubmit} className="res-form">
         <fieldset>
           <div className="form-group">
@@ -94,7 +95,6 @@ function Form({ onSubmit, onCancel, initialFormData }) {
             <label htmlFor="people" className="form-label">
               Number of People
             </label>
-
             {/* people input box */}
             <input
               type="number"
@@ -103,7 +103,7 @@ function Form({ onSubmit, onCancel, initialFormData }) {
               className="form-control"
               value={formData.people}
               required
-              placeholder="Number of People"
+              placeholder="#"
               onChange={handleChange}
               min="1"
             />
