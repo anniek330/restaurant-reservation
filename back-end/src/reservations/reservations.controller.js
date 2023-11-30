@@ -51,7 +51,7 @@ async function reservationExists(req, res, next) {
     message: `Reservation ${reservation_id} cannot be found.`,
   });
 }
-//check if time is real: btw 10:30 and 21:30 (9:30 pm) 
+//check if time is real: btw 10:30 and 21:30 (9:30 pm)
 function validateTime(str) {
   const [hour, minute] = str.split(":");
 
@@ -83,7 +83,7 @@ function validateTimeField(req, res, next) {
       if (!validateTime(data[field])) {
         return next({
           status: 400,
-          message: `${"reservation_time"} is not a valid time.`,
+          message: `${data[field]} is not a valid time.`,
         });
       }
     }
@@ -97,7 +97,7 @@ function validateDateField(req, res, next) {
       if (!Date.parse(data[field])) {
         return next({
           status: 400,
-          message: `${"reservation_date"} is not a valid date.`,
+          message: `${data[field]} is not a valid date.`,
         });
       }
     }
@@ -112,7 +112,7 @@ function validatePeopleField(req, res, next) {
       if (!isNumber || Number(data[field]) < 0) {
         return next({
           status: 400,
-          message: `${"people"} is not a valid number greater than zero.`,
+          message: `${data[field]} is not a valid number greater than zero.`,
         });
       }
     }
