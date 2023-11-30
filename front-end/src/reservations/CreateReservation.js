@@ -10,7 +10,7 @@ function CreateReservation() {
     first_name: "",
     last_name: "",
     mobile_number: "",
-    people: "",
+    people: 1,
     reservation_date: "",
     reservation_time: "",
   };

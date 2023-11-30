@@ -109,10 +109,10 @@ function validatePeopleField(req, res, next) {
   Object.keys(data).filter((field) => {
     if (field === "people") {
       const isNumber = Number.isInteger(data[field]);
-      if (!isNumber || Number(data[field]) < 0) {
+      if (!isNumber || Number(data[field]) < 1) {
         return next({
           status: 400,
-          message: `${data[field]} is not a valid number greater than zero.`,
+          message: `${data[field]} must be a number greater than zero.`,
         });
       }
     }

@@ -27,6 +27,7 @@ function Form({ onSubmit, onCancel, initialFormData }) {
       })
       .catch(setReservationError);
   }
+  
   return (
     <div>
       <ErrorAlert error={reservationError} />
