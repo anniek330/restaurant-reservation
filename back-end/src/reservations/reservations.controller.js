@@ -148,9 +148,7 @@ function validateInTheFuture(req, res, next) {
   }
   next();
 }
-// async function list(req, res) {
-//   res.json({ data: await service.listReservationsByDate(req.query.reservation_date) });
-// }
+
 async function list(req, res) {
   const { date } = req.query;
   if (date) {
