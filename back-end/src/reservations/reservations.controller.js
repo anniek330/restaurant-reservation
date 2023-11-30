@@ -83,7 +83,7 @@ function validateTimeField(req, res, next) {
       if (!validateTime(data[field])) {
         return next({
           status: 400,
-          message: `${data[field]} is not a valid time.`,
+          message: `reservation_time: ${field[data]} is not a valid time.`,
         });
       }
     }
@@ -97,7 +97,7 @@ function validateDateField(req, res, next) {
       if (!Date.parse(data[field])) {
         return next({
           status: 400,
-          message: `${data[field]} is not a valid date.`,
+          message: `reservation_date: ${field[data]} is not a valid date.`,
         });
       }
     }
@@ -109,10 +109,10 @@ function validatePeopleField(req, res, next) {
   Object.keys(data).filter((field) => {
     if (field === "people") {
       const isNumber = Number.isInteger(data[field]);
-      if (!isNumber || Number(data[field]) < 1) {
+      if (!isNumber || Number(data[field]) < 0) {
         return next({
           status: 400,
-          message: `${data[field]} must be a number greater than zero.`,
+          message: `Number of people: ${field[data]} must be a number greater than zero.`,
         });
       }
     }
