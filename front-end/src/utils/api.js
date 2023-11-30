@@ -80,9 +80,9 @@ export async function createReservation(reservation, signal) {
 
   return await fetchJson(url, options);
 }
-// //cancel reservation
-// export async function cancelReservation(reservation_id, signal) {
-//  const url = `${API_BASE_URL}/reservations/${reservation_id}`;
-//   const options = { method: "DELETE", signal };
-// return await fetchJson(url, options);
-// }
+//cancel reservation
+export async function cancelReservation(reservation_id, signal) {
+ const url = `${API_BASE_URL}/reservations/${reservation_id}`;
+  const options = { method: "DELETE", signal };
+return await fetchJson(url, options);
+}
