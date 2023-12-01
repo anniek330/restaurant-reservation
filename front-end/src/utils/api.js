@@ -82,7 +82,23 @@ export async function createReservation(reservation, signal) {
 }
 //cancel reservation
 export async function cancelReservation(reservation_id, signal) {
- const url = `${API_BASE_URL}/reservations/${reservation_id}`;
+  const url = `${API_BASE_URL}/reservations/${reservation_id}`;
   const options = { method: "DELETE", signal };
-return await fetchJson(url, options);
+  return await fetchJson(url, options);
+}
+
+//creates new table
+export async function createTable(table, signal) {
+  const url = `${API_BASE_URL}/tables`;
+  const options = {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ data: table }),
+    signal,
+  };
+  return await fetchJson(url, options, []);
+}
+export async function listTables(params, signal) {
+  const url = new URL(`${API_BASE_URL}/tables`);
+  return await fetchJson(url, { headers, signal }, []);
 }

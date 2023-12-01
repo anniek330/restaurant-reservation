@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { listReservations } from "../utils/api";
+import { listReservations, listTables } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 
 import { useHistory } from "react-router-dom";
 import { previous, next } from "../utils/date-time";
 import ReservationCard from "./ReservationList";
+import TableCard from "./TableCard"
 
 /**
  * Defines the dashboard page.
@@ -15,6 +16,10 @@ import ReservationCard from "./ReservationList";
 function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
+
+  const [tables, setTables] = useState([]);
+  const [tablesError, setTablesError] = useState(null);
+
   const history = useHistory();
 
   useEffect(loadDashboard, [date]);
@@ -25,6 +30,8 @@ function Dashboard({ date }) {
     setReservationsError(null);
     listReservations({ date }, abortController.signal)
       .then(setReservations)
+      .then(listTables)
+      .then(setTables)
       .catch(setReservationsError);
     return () => abortController.abort();
   }
@@ -62,6 +69,14 @@ function Dashboard({ date }) {
         </button>
       </div>
       <ReservationCard reservations={reservations} />
+
+      <div className="col-md-6 col-sm-12">
+        <div className="d-md-flex mb-3">
+          <h4>Tables</h4>
+        </div>
+        <ErrorAlert error={tablesError} />
+        <TableCard tables={tables} />
+      </div>
     </main>
   );
 }
