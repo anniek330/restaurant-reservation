@@ -44,6 +44,7 @@ function validateCapacityField(req, res, next) {
       if (!isNumber || Number(data[field]) < 0) {
         return next({
           status: 400,
+          //capacity can't be capitalized bc of test
           message: `capacity: ${data[field]} is not a valid number greater than zero.`,
         });
       }
@@ -94,7 +95,7 @@ async function reservationExists(req, res, next) {
   });
 }
 
-function tableIsAvailable(req, res, next) {
+function tableIsOccupied(req, res, next) {
   const table = res.locals.table;
   if (table.reservation_id) {
     next({
@@ -104,8 +105,17 @@ function tableIsAvailable(req, res, next) {
   }
   return next();
 }
-
-function enoughCapacityForRes(req,res,next) {
+function tableIsNotOccupied(req, res, next) {
+  const table = res.locals.table;
+  if (!table.reservation_id) {
+    next({
+      status: 400,
+      message: "Table is not occupied.",
+    });
+  }
+  return next();
+}
+function enoughCapacityForRes(req, res, next) {
   const table = res.locals.table;
   const reservation = res.locals.reservation;
 
@@ -119,11 +129,33 @@ function enoughCapacityForRes(req,res,next) {
   });
 }
 
-
 async function seatReservation(req, res) {
   const updatedTable = {
     ...req.body.data,
     table_id: res.locals.table.table_id,
+  };
+  const data = await service.update(updatedTable);
+  res.json({ data });
+}
+
+//get res_id
+async function getReservation(req, res, next) {
+  const reservation_id = res.locals.table.reservation_id;
+  const reservation = await reservationService.read(reservation_id);
+  if (reservation) {
+    res.locals.reservation = reservation;
+    return next();
+  }
+  next({
+    status: 404,
+    message: `Reservation ${reservation_id} cannot be found.`,
+  });
+}
+
+async function removeReservation(req, res) {
+  const updatedTable = {
+    ...res.locals.table,
+    reservation_id: null,
   };
   const data = await service.update(updatedTable);
   res.json({ data });
@@ -139,12 +171,18 @@ module.exports = {
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(tableExists), read],
-  seatReservation: [
+  seatReservationAtTable: [
     asyncErrorBoundary(tableExists),
     hasProperties("reservation_id"),
     asyncErrorBoundary(reservationExists),
-    tableIsAvailable,
+    tableIsOccupied,
     enoughCapacityForRes,
     asyncErrorBoundary(seatReservation),
+  ],
+  removeReservationFromTable: [
+    asyncErrorBoundary(tableExists),
+    tableIsNotOccupied,
+    asyncErrorBoundary(getReservation),
+    asyncErrorBoundary(removeReservation),
   ],
 };
