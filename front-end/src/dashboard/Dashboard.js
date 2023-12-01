@@ -5,7 +5,8 @@ import ErrorAlert from "../layout/ErrorAlert";
 import { useHistory } from "react-router-dom";
 import { previous, next } from "../utils/date-time";
 import ReservationCard from "./ReservationList";
-import TableCard from "./TableCard"
+import TableCard from "./TableCard";
+
 
 /**
  * Defines the dashboard page.
@@ -24,12 +25,16 @@ function Dashboard({ date }) {
 
   useEffect(loadDashboard, [date]);
 
-  //get reservations from database
+  //get reservations and tables from database
   function loadDashboard() {
     const abortController = new AbortController();
     setReservationsError(null);
+
     listReservations({ date }, abortController.signal)
-      .then(setReservations)
+      .then((reservations) => {
+        setReservations(reservations);
+        return reservations;
+      })
       .then(listTables)
       .then(setTables)
       .catch(setReservationsError);
