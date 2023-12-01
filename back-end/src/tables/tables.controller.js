@@ -128,13 +128,26 @@ function enoughCapacityForRes(req, res, next) {
     message: "Number of people in reservation exceeds this table's capacity.",
   });
 }
-
+function reservationIsAlreadySeated(req, res, next) {
+  const reservation = res.locals.reservation;
+  if (reservation.status && reservation.status === "seated") {
+    return next({
+      status: 400,
+      message: "Reservation is already seated at a table.",
+    });
+  }
+  next();
+}
 async function seatReservation(req, res) {
   const updatedTable = {
     ...req.body.data,
     table_id: res.locals.table.table_id,
   };
-  const data = await service.update(updatedTable);
+  const updatedReservation = {
+    ...res.locals.reservation,
+    status: "seated",
+  };
+  const data = await service.update(updatedTable, updatedReservation);
   res.json({ data });
 }
 
@@ -157,7 +170,12 @@ async function removeReservation(req, res) {
     ...res.locals.table,
     reservation_id: null,
   };
-  const data = await service.update(updatedTable);
+  const updatedReservation = {
+    ...res.locals.reservation,
+    reservation_id: res.locals.reservation.reservation_id,
+    status: "finished",
+  };
+  const data = await service.update(updatedTable, updatedReservation);
   res.json({ data });
 }
 
@@ -175,6 +193,7 @@ module.exports = {
     asyncErrorBoundary(tableExists),
     hasProperties("reservation_id"),
     asyncErrorBoundary(reservationExists),
+    reservationIsAlreadySeated,
     tableIsOccupied,
     enoughCapacityForRes,
     asyncErrorBoundary(seatReservation),

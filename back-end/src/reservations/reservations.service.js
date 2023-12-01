@@ -16,7 +16,7 @@ function listReservationsByDate(reservation_date) {
 
 function create(reservation) {
   return knex("reservations")
-    .insert(reservation) //OR .insert(reservation,"*") without "returning" line
+    .insert(reservation) 
     .returning("*")
     .then((createdReservation) => createdReservation[0]);
 }

@@ -18,4 +18,8 @@ router
 //route to a single reservation
 router.route("/:reservation_id").get(controller.read).all(methodNotAllowed);
 
+router.route("/:reservation_id/status").all(methodNotAllowed);
+
+//router.route("/date=XXXX-XX-XX").all(methodNotAllowed);
+
 module.exports = router;
