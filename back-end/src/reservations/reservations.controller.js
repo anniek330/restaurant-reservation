@@ -178,8 +178,13 @@ function statusIsFinished(req, res, next) {
 
 async function list(req, res) {
   const { date } = req.query;
+  const { mobile_number } = req.query;
   if (date) {
     const data = await service.listReservationsByDate(date);
+    res.status(200).json({ data });
+  }
+  if (mobile_number) {
+    const data = await service.search(mobile_number);
     res.status(200).json({ data });
   } else {
     const data = await service.list();
