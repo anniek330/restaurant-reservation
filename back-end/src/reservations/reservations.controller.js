@@ -14,17 +14,6 @@ const VALID_PROPERTIES = [
   "status",
 ];
 
-//all properties are filled in
-const hasRequiredProperties = hasProperties(
-  "first_name",
-  "last_name",
-  "mobile_number",
-  "people",
-  "reservation_date",
-  "reservation_time",
-  "status"
-);
-
 //only has properties from VALID array
 function hasOnlyValidProperties(req, res, next) {
   const { data = {} } = req.body;
@@ -187,8 +176,6 @@ function statusIsFinished(req, res, next) {
   next();
 }
 
-
-
 async function list(req, res) {
   const { date } = req.query;
   if (date) {
@@ -221,8 +208,14 @@ async function update(req, res) {
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
-    hasOnlyValidProperties,
-    hasRequiredProperties,
+    hasProperties(
+      "first_name",
+      "last_name",
+      "mobile_number",
+      "people",
+      "reservation_date",
+      "reservation_time"
+    ),
     validateTimeField,
     validatePeopleField,
     validateDateField,
