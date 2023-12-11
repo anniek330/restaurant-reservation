@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
 import ErrorAlert from "../layout/ErrorAlert";
-import { createTable } from "../utils/api";
 
 function Form({ onSubmit, onCancel, initialFormData }) {
   const history = useHistory();
   const [formData, setFormData] = useState({ ...initialFormData });
   const [tableError, setTableError] = useState(null);
-
 
   const handleChange = ({ target }) => {
     setFormData({
@@ -19,7 +17,7 @@ function Form({ onSubmit, onCancel, initialFormData }) {
   //submit handler for each reservation:
   function handleSubmit(event) {
     event.preventDefault();
-    createTable(formData)
+    onSubmit(formData)
       //return to home page on res date
       .then(() => {
         history.push(`/`);

@@ -1,13 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
-
 
 function TableCard({ tables }) {
- 
-
   // reservations.map
   const tableCard = tables.map((table) => (
-    <div className="card">
+    <div key={table.table_id} className="card">
       <div className="card-body">
         <h5 className="card-title">Table: {table.table_name}</h5>
         <p className="card-text">Capacity: {table.capacity}</p>

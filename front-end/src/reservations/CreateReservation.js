@@ -3,8 +3,6 @@ import { useHistory } from "react-router-dom";
 import Form from "./Form";
 import { createReservation } from "../utils/api";
 
-
-
 function CreateReservation() {
   const initialFormData = {
     first_name: "",
@@ -37,4 +35,3 @@ function CreateReservation() {
 }
 
 export default CreateReservation;
-

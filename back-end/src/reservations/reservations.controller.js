@@ -43,8 +43,8 @@ async function reservationExists(req, res, next) {
   });
 }
 //check if time is real: btw 10:30 and 21:30 (9:30 pm)
-function validateTime(str) {
-  const [hour, minute] = str.split(":");
+function validateTime(string) {
+  const [hour, minute] = string.split(":");
 
   if (hour.length > 2 || minute.length > 2) {
     return false;
@@ -74,7 +74,7 @@ function validateTimeField(req, res, next) {
       if (!validateTime(data[field])) {
         return next({
           status: 400,
-          message: `reservation_time: ${field[data]} is not a valid time.`,
+          message: `reservation_time: ${data[field]} is not a valid time.`,
         });
       }
     }
@@ -88,7 +88,7 @@ function validateDateField(req, res, next) {
       if (!Date.parse(data[field])) {
         return next({
           status: 400,
-          message: `reservation_date: ${field[data]} is not a valid date.`,
+          message: `reservation_date: ${data[field]} is not a valid date.`,
         });
       }
     }
@@ -103,13 +103,28 @@ function validatePeopleField(req, res, next) {
       if (!isNumber || Number(data[field]) < 0) {
         return next({
           status: 400,
-          message: `Number of people: ${field[data]} must be a number greater than zero.`,
+          message: `Number of people: ${data[field]} must be a number greater than zero.`,
         });
       }
     }
   });
   next();
 }
+
+// function validatePeopleField(req, res, next) {
+//   const { people } = req.body.data;
+//   console.log(people);
+//   const isNumber = Number.isInteger(people);
+//   console.log(isNumber);
+//   if (!isNumber) {
+//     return next({
+//       status: 400,
+//       message: `Number of people: ${people} must be a number greater than zero.`,
+//     });
+//   }
+//   next();
+//}
+
 // date.getDay(): (Sunday is 0 and Saturday is 6).
 function validateNotOnTuesday(req, res, next) {
   const { reservation_date } = req.body.data;
