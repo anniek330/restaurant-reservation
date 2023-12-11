@@ -9,7 +9,7 @@ exports.up = function (knex) {
     table.time("reservation_time");
     table.timestamps(true, true);
   });
-};
+};  
 
 exports.down = function (knex) {
   return knex.schema.dropTable("reservations");
