@@ -11,17 +11,8 @@ const VALID_PROPERTIES = [
   "people",
   "reservation_date",
   "reservation_time",
+  "status",
 ];
-
-//all properties are filled in
-const hasRequiredProperties = hasProperties(
-  "first_name",
-  "last_name",
-  "mobile_number",
-  "people",
-  "reservation_date",
-  "reservation_time"
-);
 
 //only has properties from VALID array
 function hasOnlyValidProperties(req, res, next) {
@@ -52,8 +43,8 @@ async function reservationExists(req, res, next) {
   });
 }
 //check if time is real: btw 10:30 and 21:30 (9:30 pm)
-function validateTime(str) {
-  const [hour, minute] = str.split(":");
+function validateTime(string) {
+  const [hour, minute] = string.split(":");
 
   if (hour.length > 2 || minute.length > 2) {
     return false;
@@ -83,7 +74,7 @@ function validateTimeField(req, res, next) {
       if (!validateTime(data[field])) {
         return next({
           status: 400,
-          message: `reservation_time: ${field[data]} is not a valid time.`,
+          message: `reservation_time: ${data[field]} is not a valid time.`,
         });
       }
     }
@@ -97,7 +88,7 @@ function validateDateField(req, res, next) {
       if (!Date.parse(data[field])) {
         return next({
           status: 400,
-          message: `reservation_date: ${field[data]} is not a valid date.`,
+          message: `reservation_date: ${data[field]} is not a valid date.`,
         });
       }
     }
@@ -112,13 +103,28 @@ function validatePeopleField(req, res, next) {
       if (!isNumber || Number(data[field]) < 0) {
         return next({
           status: 400,
-          message: `Number of people: ${field[data]} must be a number greater than zero.`,
+          message: `Number of people: ${data[field]} must be a number greater than zero.`,
         });
       }
     }
   });
   next();
 }
+
+// function validatePeopleField(req, res, next) {
+//   const { people } = req.body.data;
+//   console.log(people);
+//   const isNumber = Number.isInteger(people);
+//   console.log(isNumber);
+//   if (!isNumber) {
+//     return next({
+//       status: 400,
+//       message: `Number of people: ${people} must be a number greater than zero.`,
+//     });
+//   }
+//   next();
+//}
+
 // date.getDay(): (Sunday is 0 and Saturday is 6).
 function validateNotOnTuesday(req, res, next) {
   const { reservation_date } = req.body.data;
@@ -149,6 +155,42 @@ function validateInTheFuture(req, res, next) {
   next();
 }
 
+//default status is booked
+function validateDefaultStatus(req, res, next) {
+  const { status } = req.body.data;
+  console.log(status);
+  if (status && status !== "booked") {
+    next({
+      status: 400,
+      message: `${status} is not a vaild status. New reservations must have a status of: booked.`,
+    });
+  }
+  next();
+}
+// returns 201 if status is 'booked'
+// returns 400 if status is 'seated'
+// returns 400 if status is 'finished'
+function validateStatusField(req, res, next) {
+  const { status } = req.body.data;
+  if (status && !["booked", "finished", "seated"].includes(status)) {
+    return next({
+      status: 400,
+      message: `Reservation status: ${status} is not allowed.`,
+    });
+  }
+  next();
+}
+function statusIsFinished(req, res, next) {
+  const { status } = res.locals.reservation;
+  if (status && status === "finished") {
+    return next({
+      status: 400,
+      message: `A finished reservation cannot be updated.`,
+    });
+  }
+  next();
+}
+
 async function list(req, res) {
   const { date } = req.query;
   if (date) {
@@ -169,17 +211,40 @@ function read(req, res) {
   res.send({ data });
 }
 
+async function update(req, res) {
+  const updatedReservation = {
+    ...req.body.data,
+    reservation_id: res.locals.reservation.reservation_id,
+  };
+  const data = await service.update(updatedReservation);
+  res.json({ data });
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
-    hasOnlyValidProperties,
-    hasRequiredProperties,
+    hasProperties(
+      "first_name",
+      "last_name",
+      "mobile_number",
+      "people",
+      "reservation_date",
+      "reservation_time"
+    ),
     validateTimeField,
     validatePeopleField,
     validateDateField,
     validateNotOnTuesday,
     validateInTheFuture,
+    validateDefaultStatus,
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationExists), read],
+  updateStatus: [
+    hasOnlyValidProperties,
+    asyncErrorBoundary(reservationExists),
+    validateStatusField,
+    statusIsFinished,
+    asyncErrorBoundary(update),
+  ],
 };

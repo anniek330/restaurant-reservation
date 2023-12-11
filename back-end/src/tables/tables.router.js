@@ -15,9 +15,10 @@ router
   .post(controller.create)
   .all(methodNotAllowed);
 
-router.route("/:table_id").get(controller.read).all(methodNotAllowed);
-
-//  ("/:reservation_id/seat")
-
+router
+  .route("/:table_id/seat")
+  .put(controller.seatReservationAtTable)
+  .delete(controller.removeReservationFromTable)
+  .all(methodNotAllowed);
 
 module.exports = router;

@@ -80,9 +80,74 @@ export async function createReservation(reservation, signal) {
 
   return await fetchJson(url, options);
 }
+
 //cancel reservation
 export async function cancelReservation(reservation_id, signal) {
- const url = `${API_BASE_URL}/reservations/${reservation_id}`;
+  const url = `${API_BASE_URL}/reservations/${reservation_id}`;
   const options = { method: "DELETE", signal };
-return await fetchJson(url, options);
+  return await fetchJson(url, options);
+}
+/**
+ * Retrieves the res with the specified `reservation_id`
+ * @param reservation_id
+ *  the `id` property matching the desired res.
+ * @param signal
+ *  optional AbortController.signal
+ * @returns {Promise<any>}
+ *  a promise that resolves to the saved res.
+ */
+export async function readReservation(reservation_id, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}`;
+  return await fetchJson(url, { headers, signal }, [])
+    .then(formatReservationDate)
+    .then(formatReservationTime);
+}
+/**
+ * Updates an existing res
+ * @param updatedRes
+ *  the res to save, which must have an `id` property.
+ * @param signal
+ *  optional AbortController.signal
+ * @returns {Promise<Error|*>}
+ *  a promise that resolves to the updated res.
+ */
+// export async function updateReservation(updatedReservation, signal) {
+//   const url = `${API_BASE_URL}/reservations/${updatedReservation_id}`;
+//   const options = {
+//     method: "PUT",
+//     headers,
+//     body: JSON.stringify(updatedReservation),
+//     signal,
+//   };
+//   return await fetchJson(url, options, updatedReservation);
+// }
+
+//seat a res at a table
+export async function seatReservation(reservation_id, table_id, signal) {
+  const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({ data: { reservation_id: reservation_id } }),
+    signal,
+  };
+  return await fetchJson(url, options, []);
+}
+
+//creates new table
+export async function createTable(table, signal) {
+  const url = `${API_BASE_URL}/tables`;
+  table.capacity = Number(table.capacity);
+  const options = {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ data: table }),
+    signal,
+  };
+  return await fetchJson(url, options, []);
+}
+
+export async function listTables(params, signal) {
+  const url = new URL(`${API_BASE_URL}/tables`);
+  return await fetchJson(url, { headers, signal }, []);
 }

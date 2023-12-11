@@ -1,4 +1,5 @@
 import React from "react";
+import {Link } from "react-router-dom";
 //import { cancelReservation } from "../utils/api";
 
 function ReservationCard({ reservations }) {
@@ -27,7 +28,14 @@ function ReservationCard({ reservations }) {
       <div className="card-buttons">
         {/* <button className="btn btn-danger" onClick={handleCancel}>
           Cancel
-        </button> */}
+  </button> */}
+
+        <Link
+          className="btn btn-primary"
+          to={`/reservations/${res.reservation_id}/seat`}
+        >
+          Seat
+        </Link>
       </div>
     </div>
   ));

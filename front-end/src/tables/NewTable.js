@@ -1,17 +1,14 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import Form from "./Form";
-import { createReservation } from "../utils/api";
+import TableForm from "./TableForm";
+import { createTable } from "../utils/api";
 
-function CreateReservation() {
+function NewTable() {
   const initialFormData = {
-    first_name: "",
-    last_name: "",
-    mobile_number: "",
-    people: 1,
-    reservation_date: "",
-    reservation_time: "",
+    table_name: "",
+    capacity: 1,
   };
+
   const history = useHistory();
 
   function handleCancelClick() {
@@ -22,10 +19,10 @@ function CreateReservation() {
   return (
     <>
       <div>
-        <h1>Make a Reservation</h1>
+        <h1>Add a Table</h1>
         {/* adds form to page (text boxes) */}
-        <Form
-          onSubmit={createReservation}
+        <TableForm
+          onSubmit={createTable}
           onCancel={handleCancelClick}
           initialFormData={initialFormData}
         />
@@ -34,4 +31,4 @@ function CreateReservation() {
   );
 }
 
-export default CreateReservation;
+export default NewTable;
