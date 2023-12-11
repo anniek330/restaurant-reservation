@@ -11,6 +11,7 @@ const VALID_PROPERTIES = [
   "people",
   "reservation_date",
   "reservation_time",
+  "status",
 ];
 
 //all properties are filled in
@@ -20,7 +21,8 @@ const hasRequiredProperties = hasProperties(
   "mobile_number",
   "people",
   "reservation_date",
-  "reservation_time"
+  "reservation_time",
+  "status"
 );
 
 //only has properties from VALID array
@@ -149,6 +151,44 @@ function validateInTheFuture(req, res, next) {
   next();
 }
 
+//default status is booked
+function validateDefaultStatus(req, res, next) {
+  const { status } = req.body.data;
+  console.log(status);
+  if (status && status !== "booked") {
+    next({
+      status: 400,
+      message: `${status} is not a vaild status. New reservations must have a status of: booked.`,
+    });
+  }
+  next();
+}
+// returns 201 if status is 'booked'
+// returns 400 if status is 'seated'
+// returns 400 if status is 'finished'
+function validateStatusField(req, res, next) {
+  const { status } = req.body.data;
+  if (status && !["booked", "finished", "seated"].includes(status)) {
+    return next({
+      status: 400,
+      message: `Reservation status: ${status} is not allowed.`,
+    });
+  }
+  next();
+}
+function statusIsFinished(req, res, next) {
+  const { status } = res.locals.reservation;
+  if (status && status === "finished") {
+    return next({
+      status: 400,
+      message: `A finished reservation cannot be updated.`,
+    });
+  }
+  next();
+}
+
+
+
 async function list(req, res) {
   const { date } = req.query;
   if (date) {
@@ -169,6 +209,15 @@ function read(req, res) {
   res.send({ data });
 }
 
+async function update(req, res) {
+  const updatedReservation = {
+    ...req.body.data,
+    reservation_id: res.locals.reservation.reservation_id,
+  };
+  const data = await service.update(updatedReservation);
+  res.json({ data });
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
@@ -179,7 +228,15 @@ module.exports = {
     validateDateField,
     validateNotOnTuesday,
     validateInTheFuture,
+    validateDefaultStatus,
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationExists), read],
+  updateStatus: [
+    hasOnlyValidProperties,
+    asyncErrorBoundary(reservationExists),
+    validateStatusField,
+    statusIsFinished,
+    asyncErrorBoundary(update),
+  ],
 };

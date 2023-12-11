@@ -14,6 +14,8 @@ function read(table_id) {
   return knex("tables").select("*").where({ table_id }).first();
 }
 
+
+
 async function update(updatedTable, updatedReservation) {
   const trx = await knex.transaction();
   return trx("tables")
