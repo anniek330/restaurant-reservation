@@ -16,8 +16,13 @@ router
   .all(methodNotAllowed);
 
 //route to a single reservation
-router.route("/:reservation_id").get(controller.read).all(methodNotAllowed);
+router
+  .route("/:reservation_id")
+  .get(controller.read)
+  .put(controller.update)
+  .all(methodNotAllowed);
 
+//route to update the status
 router
   .route("/:reservation_id/status")
   .put(controller.updateStatus)

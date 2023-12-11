@@ -11,7 +11,7 @@ function listReservationsByDate(reservation_date) {
   return knex("reservations")
     .select("*")
     .where({ reservation_date })
-    .whereNot({status:"finished"})
+    .whereNot({ status: "finished" })
     .orderBy("reservation_time");
 }
 
@@ -43,9 +43,9 @@ function search(mobile_number) {
 
 module.exports = {
   list,
+  listReservationsByDate,
   create,
   read,
-  listReservationsByDate,
   update,
-  search
+  search,
 };

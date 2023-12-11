@@ -12,6 +12,9 @@ const VALID_PROPERTIES = [
   "reservation_date",
   "reservation_time",
   "status",
+  "reservation_id",
+  "created_at",
+  "updated_at",
 ];
 
 //only has properties from VALID array
@@ -143,7 +146,6 @@ function validateInTheFuture(req, res, next) {
 //default status is booked
 function validateDefaultStatus(req, res, next) {
   const { status } = req.body.data;
-  console.log(status);
   if (status && status !== "booked") {
     next({
       status: 400,
@@ -152,12 +154,10 @@ function validateDefaultStatus(req, res, next) {
   }
   next();
 }
-// returns 201 if status is 'booked'
-// returns 400 if status is 'seated'
-// returns 400 if status is 'finished'
+
 function validateStatusField(req, res, next) {
   const { status } = req.body.data;
-  if (status && !["booked", "finished", "seated"].includes(status)) {
+  if (status && !["booked", "finished","seated","cancelled"].includes(status)) {
     return next({
       status: 400,
       message: `Reservation status: ${status} is not allowed.`,
@@ -235,6 +235,26 @@ module.exports = {
     asyncErrorBoundary(reservationExists),
     validateStatusField,
     statusIsFinished,
+    asyncErrorBoundary(update),
+  ],
+  update: [
+    asyncErrorBoundary(reservationExists),
+    hasProperties(
+      "first_name",
+      "last_name",
+      "mobile_number",
+      "people",
+      "reservation_date",
+      "reservation_time"
+    ),
+    hasOnlyValidProperties,
+    validateTimeField,
+    validatePeopleField,
+    validateDateField,
+    validateNotOnTuesday,
+    validateInTheFuture,
+    validateDefaultStatus,
+    validateStatusField,
     asyncErrorBoundary(update),
   ],
 };
