@@ -9,18 +9,12 @@ function SeatResAtTable() {
 
   const [tables, setTables] = useState([]);
   const [tableToBeSelected, setTableToBeSelected] = useState(null);
-
   const [error, setError] = useState(null);
 
-  useEffect(loadTables, []);
-
   //get tables from database
-  function loadTables() {
-    const abortController = new AbortController();
-    setError(null);
-    listTables(abortController.signal).then(setTables).catch(setError);
-    return () => abortController.abort();
-  }
+  useEffect(() => {
+    listTables().then((data) => setTables(data));
+  }, []);
 
   function handleCancelClick() {
     history.goBack(); // cancel button redirects to previous page
@@ -30,19 +24,13 @@ function SeatResAtTable() {
     setTableToBeSelected(event.target.value);
   };
 
-  function handleSubmit(event) {
+  //"tableToBeSelected" is the table_id
+  const handleSubmit = (event) => {
     event.preventDefault();
-    if (!tableToBeSelected) {
-      setError("Please select a table");
-      return;
-    }
-    const abortController = new AbortController();
-    seatReservation(tableToBeSelected, reservation_id, abortController.signal)
-      .then(() => {
-        history.push(`/`);
-      })
-      .catch(setError);
-  }
+    seatReservation(reservation_id, tableToBeSelected)
+      .then(() => history.push("/dashboard"))
+      .catch((error) => setError(error));
+  };
 
   return (
     <>
@@ -60,7 +48,7 @@ function SeatResAtTable() {
               <select
                 id="table_id"
                 name="table_id"
-                value={tableToBeSelected}
+                //value={tableToBeSelected}
                 onChange={handleSelectChange}
               >
                 <option value="">Select a table</option>

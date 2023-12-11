@@ -80,6 +80,7 @@ export async function createReservation(reservation, signal) {
 
   return await fetchJson(url, options);
 }
+
 //cancel reservation
 export async function cancelReservation(reservation_id, signal) {
   const url = `${API_BASE_URL}/reservations/${reservation_id}`;
@@ -121,7 +122,6 @@ export async function readReservation(reservation_id, signal) {
 //   return await fetchJson(url, options, updatedReservation);
 // }
 
-
 //seat a res at a table
 export async function seatReservation(reservation_id, table_id, signal) {
   const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
@@ -134,11 +134,10 @@ export async function seatReservation(reservation_id, table_id, signal) {
   return await fetchJson(url, options, []);
 }
 
-
-
 //creates new table
 export async function createTable(table, signal) {
   const url = `${API_BASE_URL}/tables`;
+  table.capacity = Number(table.capacity);
   const options = {
     method: "POST",
     headers,
@@ -147,10 +146,8 @@ export async function createTable(table, signal) {
   };
   return await fetchJson(url, options, []);
 }
+
 export async function listTables(params, signal) {
   const url = new URL(`${API_BASE_URL}/tables`);
   return await fetchJson(url, { headers, signal }, []);
 }
-
-
-

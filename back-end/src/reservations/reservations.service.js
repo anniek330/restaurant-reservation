@@ -10,8 +10,8 @@ function list() {
 function listReservationsByDate(reservation_date) {
   return knex("reservations")
     .select("*")
-    .where({ reservation_date })
-    .whereNot({ status: "finished" })
+    .where({reservation_date})
+    .whereNot({status:"finished"})
     .orderBy("reservation_time");
 }
 

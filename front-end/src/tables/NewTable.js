@@ -1,6 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import TableForm from "./TableForm";
+import { createTable } from "../utils/api";
 
 function NewTable() {
   const initialFormData = {
@@ -21,6 +22,7 @@ function NewTable() {
         <h1>Add a Table</h1>
         {/* adds form to page (text boxes) */}
         <TableForm
+          onSubmit={createTable}
           onCancel={handleCancelClick}
           initialFormData={initialFormData}
         />
