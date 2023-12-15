@@ -30,7 +30,7 @@ function ReservationCard({
           <p className="card-text">Date: {res.reservation_date}</p>
           <p className="card-text">Time: {res.reservation_time}</p>
           <p className="card-text">Party Size: {res.people}</p>
-          <p className="card-text">Status: {res.status}</p>
+          <p className="card-text" data-reservation-id-status={res.reservation_id}>Status: {res.status}</p>
         </div>
       </div>
 

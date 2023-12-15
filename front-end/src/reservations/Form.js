@@ -8,7 +8,7 @@ function Form({ onSubmit, onCancel, initialFormData }) {
   const [formData, setFormData] = useState({...initialFormData});
   const [reservationError, setReservationError] = useState(null);
 
-  console.log(initialFormData);
+  //console.log(initialFormData);
 
   useEffect(() => {
     setFormData({ ...initialFormData });
@@ -16,7 +16,7 @@ function Form({ onSubmit, onCancel, initialFormData }) {
 
 
   const handleChange = ({ target }) => {
-    console.log(formData);
+    //console.log(formData);
     setFormData({
       ...formData,
       [target.name]: target.value,
