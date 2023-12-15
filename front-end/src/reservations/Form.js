@@ -1,16 +1,22 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useHistory } from "react-router";
 import ErrorAlert from "../layout/ErrorAlert";
-import { createReservation } from "../utils/api";
 
 function Form({ onSubmit, onCancel, initialFormData }) {
+
   const history = useHistory();
-  const [formData, setFormData] = useState({ ...initialFormData });
+  const [formData, setFormData] = useState({...initialFormData});
   const [reservationError, setReservationError] = useState(null);
 
   //console.log(initialFormData);
 
+  useEffect(() => {
+    setFormData({ ...initialFormData });
+  }, [initialFormData]);
+
+
   const handleChange = ({ target }) => {
+    //console.log(formData);
     setFormData({
       ...formData,
       [target.name]: target.value,
@@ -20,14 +26,14 @@ function Form({ onSubmit, onCancel, initialFormData }) {
   //submit handler for each reservation:
   function handleSubmit(event) {
     event.preventDefault();
-    createReservation(formData)
+    onSubmit(formData)
       //return to home page on res date
       .then(() => {
         history.push(`/dashboard?date=${formData.reservation_date}`);
       })
       .catch(setReservationError);
   }
-  
+
   return (
     <div>
       <ErrorAlert error={reservationError} />
@@ -51,7 +57,6 @@ function Form({ onSubmit, onCancel, initialFormData }) {
               onChange={handleChange}
             />
           </div>
-
           <div className="form-group">
             {/* last name label */}
             <label htmlFor="last_name" className="form-label">
@@ -70,7 +75,6 @@ function Form({ onSubmit, onCancel, initialFormData }) {
               onChange={handleChange}
             />
           </div>
-
           <div className="form-group">
             {/* mobile label */}
             <label htmlFor="mobile_number" className="form-label">
@@ -89,7 +93,6 @@ function Form({ onSubmit, onCancel, initialFormData }) {
               onChange={handleChange}
             />
           </div>
-
           <div className="form-group">
             {/* people label */}
             <label htmlFor="people" className="form-label">
@@ -108,7 +111,6 @@ function Form({ onSubmit, onCancel, initialFormData }) {
               min="1"
             />
           </div>
-
           <div className="form-group">
             {/* date label */}
             <label htmlFor="reservation_date" className="form-label">
@@ -127,7 +129,6 @@ function Form({ onSubmit, onCancel, initialFormData }) {
               onChange={handleChange}
             />
           </div>
-
           <div className="form-group">
             {/* time label */}
             <label htmlFor="reservation_time" className="form-label">
@@ -149,13 +150,13 @@ function Form({ onSubmit, onCancel, initialFormData }) {
         </fieldset>
 
         <div>
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary w-25">
             Submit
           </button>
 
           <button
             type="button"
-            className="btn btn-secondary mr-2"
+            className="btn btn-danger w-25"
             onClick={onCancel}
           >
             Cancel
@@ -163,7 +164,7 @@ function Form({ onSubmit, onCancel, initialFormData }) {
         </div>
       </form>
     </div>
-  );
+  )
 }
 
 export default Form;

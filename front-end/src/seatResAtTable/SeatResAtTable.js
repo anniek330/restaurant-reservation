@@ -54,7 +54,7 @@ function SeatResAtTable() {
                 <option value="">Select a table</option>
                 {tables.map((table) => (
                   <option key={table.table_id} value={table.table_id}>
-                    Table Name: {table.table_name} - Capacity: {table.capacity}
+                    {table.table_name} - {table.capacity}
                   </option>
                 ))}
               </select>
@@ -62,13 +62,15 @@ function SeatResAtTable() {
           </fieldset>
 
           <div>
-            <button type="button" onClick={handleCancelClick}>
-              Cancel
-            </button>
-            <button type="button" onClick={handleSubmit}>
+              <button className= "btn btn-primary" type="submit" onClick={handleSubmit}>
               Submit
             </button>
+            
+            <button className= " btn btn-danger" type="button" onClick={handleCancelClick}>
+              Cancel
+            </button>
           </div>
+
         </form>
       </div>
     </>

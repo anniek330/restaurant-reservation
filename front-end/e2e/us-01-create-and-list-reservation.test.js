@@ -49,7 +49,7 @@ describe("US-01 - Create and list reservations - E2E", () => {
 
       await Promise.all([
         page.click("[type=submit]"),
-        page.waitForNavigation({ waitUntil: "networkidle0" }),
+       page.waitForNavigation({ waitUntil: "networkidle0" }),
       ]);
 
       await page.screenshot({

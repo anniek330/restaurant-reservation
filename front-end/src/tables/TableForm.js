@@ -70,13 +70,13 @@ function Form({ onSubmit, onCancel, initialFormData }) {
         </fieldset>
 
         <div>
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary w-25">
             Submit
           </button>
-
+          <> </>
           <button
             type="button"
-            className="btn btn-secondary mr-2"
+            className="btn btn-danger w-25"
             onClick={onCancel}
           >
             Cancel
