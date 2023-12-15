@@ -7,7 +7,6 @@ import { previous, next } from "../utils/date-time";
 import ReservationCard from "./ReservationList";
 import TableCard from "./TableCard";
 
-
 /**
  * Defines the dashboard page.
  * @param date
@@ -57,30 +56,50 @@ function Dashboard({ date }) {
     <main>
       <h1>Dashboard</h1>
       <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for {date}</h4>
+        <h3 className="mb-0">Reservations for {date}</h3>
       </div>
-      {JSON.stringify(reservations)}
+      {/* {JSON.stringify(reservations)} */}
 
       <ErrorAlert error={reservationsError} />
       <div>
-        <button type="button" onClick={handlePrevButton}>
+        <button
+          className="btn btn-secondary"
+          type="button"
+          onClick={handlePrevButton}
+        >
           Previous
         </button>
-        <button type="button" onClick={handleTodayButton}>
+        <button
+          className="btn btn-primary"
+          type="button"
+          onClick={handleTodayButton}
+        >
           Today
         </button>
-        <button type="button" onClick={handleNextButton}>
+        <button
+          className="btn btn-info"
+          type="button"
+          onClick={handleNextButton}
+        >
           Next
         </button>
       </div>
-      <ReservationCard reservations={reservations} />
+      <ReservationCard
+        reservations={reservations}
+        setReservationsError={setReservationsError}
+        loadDashboard={loadDashboard}
+      />
 
       <div className="col-md-6 col-sm-12">
         <div className="d-md-flex mb-3">
-          <h4>Tables</h4>
+          <h2>Tables</h2>
         </div>
         <ErrorAlert error={tablesError} />
-        <TableCard tables={tables} />
+        <TableCard
+          tables={tables}
+          setTablesError={setTablesError}
+          loadDashboard={loadDashboard}
+        />
       </div>
     </main>
   );

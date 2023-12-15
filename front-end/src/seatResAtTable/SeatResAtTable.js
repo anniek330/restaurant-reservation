@@ -62,13 +62,15 @@ function SeatResAtTable() {
           </fieldset>
 
           <div>
-            <button type="button" onClick={handleCancelClick}>
-              Cancel
-            </button>
-            <button type="button" onClick={handleSubmit}>
+              <button className= "btn btn-primary" type="button" onClick={handleSubmit}>
               Submit
             </button>
+            
+            <button className= " btn btn-danger" type="button" onClick={handleCancelClick}>
+              Cancel
+            </button>
           </div>
+
         </form>
       </div>
     </>
