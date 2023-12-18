@@ -6,7 +6,7 @@ import { createTable } from "../utils/api";
 function NewTable() {
   const initialFormData = {
     table_name: "",
-    capacity: 1,
+    capacity: "",
   };
 
   const history = useHistory();

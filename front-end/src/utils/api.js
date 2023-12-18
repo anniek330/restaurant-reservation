@@ -70,7 +70,7 @@ export async function listReservations(params, signal) {
 
 //create new reservation
 export async function createReservation(reservation, signal) {
-  const resWithNum= {...reservation, people:Number(reservation.people)}
+  const resWithNum = { ...reservation, people: Number(reservation.people) };
   const url = `${API_BASE_URL}/reservations`;
   const options = {
     method: "POST",
@@ -137,12 +137,13 @@ export async function seatReservation(reservation_id, table_id, signal) {
 
 //creates new table
 export async function createTable(table, signal) {
+  const tableWithNum = { ...table, capacity: Number(table.capacity) };
   const url = `${API_BASE_URL}/tables`;
   table.capacity = Number(table.capacity);
   const options = {
     method: "POST",
     headers,
-    body: JSON.stringify({ data: table }),
+    body: JSON.stringify({ data: tableWithNum }),
     signal,
   };
   return await fetchJson(url, options, []);
@@ -155,7 +156,11 @@ export async function listTables(params, signal) {
 }
 
 //remove res_id from a table "finish the table"
-export async function removeReservationFromTable(table_id, reservation_id, signal) {
+export async function removeReservationFromTable(
+  table_id,
+  reservation_id,
+  signal
+) {
   const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
   const options = {
     method: "DELETE",
