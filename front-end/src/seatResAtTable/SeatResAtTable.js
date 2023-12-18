@@ -66,7 +66,7 @@ function SeatResAtTable() {
               Submit
             </button>
             
-            <button className= " btn btn-danger" type="button" onClick={handleCancelClick}>
+            <button className= "btn btn-danger" type="button" onClick={handleCancelClick}>
               Cancel
             </button>
           </div>

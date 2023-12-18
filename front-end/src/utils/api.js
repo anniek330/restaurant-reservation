@@ -84,10 +84,17 @@ export async function createReservation(reservation, signal) {
 
 //cancel reservation
 export async function cancelReservation(reservation_id, signal) {
-  const url = `${API_BASE_URL}/reservations/${reservation_id}`;
-  const options = { method: "DELETE", signal };
-  return await fetchJson(url, options);
+  const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({data: { status: "cancelled" } }),
+  };
+  return await fetchJson(url, options, [])
 }
+
+
+
 /**
  * Retrieves the res with the specified `reservation_id`
  * @param reservation_id
