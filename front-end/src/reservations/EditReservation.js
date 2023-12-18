@@ -7,25 +7,21 @@ function EditReservation() {
   const history = useHistory();
 
   const { reservation_id } = useParams();
-  //console.log(reservation_id);
 
-  const [reservationData, setReservationData] = useState(
-    {
+  const [reservationData, setReservationData] = useState({
     first_name: "",
     last_name: "",
     mobile_number: "",
     people: "",
     reservation_date: "",
     reservation_time: "",
-  }
-  );
+  });
 
   const [errors, setErrors] = useState(null);
 
   useEffect(() => {
     readReservation(reservation_id)
       .then((data) => {
-        //console.log("Reservation data:", data);
         setReservationData(data);
       })
       .catch(setErrors);
@@ -34,7 +30,6 @@ function EditReservation() {
   function handleCancelClick() {
     history.goBack(); // cancel button redirects to previous page
   }
-
   //   //what the user sees on the page
   return (
     <>

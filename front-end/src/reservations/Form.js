@@ -1,38 +1,49 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router";
 import ErrorAlert from "../layout/ErrorAlert";
 
 function Form({ onSubmit, onCancel, initialFormData }) {
-
   const history = useHistory();
-  const [formData, setFormData] = useState({...initialFormData});
+  const [formData, setFormData] = useState({ ...initialFormData });
   const [reservationError, setReservationError] = useState(null);
-
-  //console.log(initialFormData);
 
   useEffect(() => {
     setFormData({ ...initialFormData });
   }, [initialFormData]);
 
-
   const handleChange = ({ target }) => {
-    //console.log(formData);
     setFormData({
       ...formData,
       [target.name]: target.value,
     });
   };
 
-  //submit handler for each reservation:
-  function handleSubmit(event) {
+  // //submit handler for each reservation:
+  // function handleSubmit(event) {
+  //   event.preventDefault();
+  //   onSubmit(formData)
+  //     //return to home page on res date
+  //     .then(() => {
+  //       history.push(`/dashboard?date=${formData.reservation_date}`);
+  //     })
+  //     .catch(setReservationError);
+  // }
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    onSubmit(formData)
-      //return to home page on res date
-      .then(() => {
-        history.push(`/dashboard?date=${formData.reservation_date}`);
-      })
-      .catch(setReservationError);
-  }
+    const controller = new AbortController();
+    try {
+      await onSubmit(formData, controller.signal);
+      history.push(`/dashboard?date=${formData.reservation_date}`);
+    } catch (error) {
+      if (error.name === "AbortError") {
+      } else {
+        setReservationError(error);
+      }
+    } finally {
+      controller.abort();
+    }
+  };
 
   return (
     <div>
@@ -164,7 +175,7 @@ function Form({ onSubmit, onCancel, initialFormData }) {
         </div>
       </form>
     </div>
-  )
+  );
 }
 
 export default Form;

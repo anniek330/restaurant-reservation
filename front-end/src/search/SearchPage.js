@@ -16,11 +16,17 @@ function SearchPage() {
 
   const handleFind = (event) => {
     event.preventDefault();
+  const abortController= new AbortController()
     setButtonClicked(true);
-    listReservations({ mobile_number })
-      .then((reservations) => setReservations(reservations))
+    listReservations({ mobile_number },abortController.signal)
+  .then((reservations) => {
+    setReservations(reservations);
+    return reservations;
+  })
       .catch(setError);
+  return () => abortController.abort();
   };
+
 
   return (
     <main>

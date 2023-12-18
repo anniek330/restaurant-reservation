@@ -88,43 +88,30 @@ export async function cancelReservation(reservation_id, signal) {
   const options = {
     method: "PUT",
     headers,
-    body: JSON.stringify({data: { status: "cancelled" } }),
+    body: JSON.stringify({ data: { status: "cancelled" } }),
   };
-  return await fetchJson(url, options, [])
+  return await fetchJson(url, options, []);
 }
 
 
-
-/**
- * Retrieves the res with the specified `reservation_id`
- * @param reservation_id
- *  the `id` property matching the desired res.
- * @param signal
- *  optional AbortController.signal
- * @returns {Promise<any>}
- *  a promise that resolves to the saved res.
- */
 export async function readReservation(reservation_id, signal) {
   const url = `${API_BASE_URL}/reservations/${reservation_id}`;
   return await fetchJson(url, { headers, signal }, [])
     .then(formatReservationDate)
     .then(formatReservationTime);
 }
-/**
- * Updates an existing res
- * @param updatedRes
- *  the res to save, which must have an `id` property.
- * @param signal
- *  optional AbortController.signal
- * @returns {Promise<Error|*>}
- *  a promise that resolves to the updated res.
- */
+
+//update a res
 export async function updateReservation(updatedReservation, signal) {
+  const resWithNum = {
+    ...updatedReservation,
+    people: Number(updatedReservation.people),
+  };
   const url = `${API_BASE_URL}/reservations/${updatedReservation.reservation_id}`;
   const options = {
     method: "PUT",
     headers,
-    body: JSON.stringify(updatedReservation),
+    body: JSON.stringify({ data: resWithNum }),
     signal,
   };
   return await fetchJson(url, options, updatedReservation);

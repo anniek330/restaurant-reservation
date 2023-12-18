@@ -19,7 +19,7 @@ function ReservationCard({
 
   // reservations.map
   const reservationCard = reservations
-    .filter((reservation) => reservation.status === "booked")
+    .filter((reservation) => reservation.status !== "cancelled")
     .map((reservation) => (
       <div className="card" key={reservation.reservation_id}>
         <div className="card-body">
@@ -42,13 +42,14 @@ function ReservationCard({
         </div>
 
         <div className="card-buttons">
-          <a
+          {reservation.status === "booked" && (
+            <a
             className="btn btn-primary"
             href={`/reservations/${reservation.reservation_id}/seat`}
           >
             Seat
           </a>
-
+          )}
           <a
             className="btn btn-primary"
             href={`/reservations/${reservation.reservation_id}/edit`}

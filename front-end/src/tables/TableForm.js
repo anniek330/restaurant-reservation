@@ -15,15 +15,31 @@ function Form({ onSubmit, onCancel, initialFormData }) {
   };
 
   //submit handler for each reservation:
-  function handleSubmit(event) {
+  // function handleSubmit(event) {
+  //   event.preventDefault();
+  //   onSubmit(formData)
+  //     //return to home page on res date
+  //     .then(() => {
+  //       history.push(`/`);
+  //     })
+  //     .catch(setTableError);
+  // }
+  
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    onSubmit(formData)
-      //return to home page on res date
-      .then(() => {
-        history.push(`/`);
-      })
-      .catch(setTableError);
-  }
+    const controller = new AbortController();
+    try {
+      await onSubmit(formData, controller.signal);
+      history.push(`/`);
+    } catch (error) {
+      if (error.name === "AbortError") {
+      } else {
+        setTableError(error);
+      }
+    } finally {
+      controller.abort();
+    }
+  };
 
   return (
     <div>
