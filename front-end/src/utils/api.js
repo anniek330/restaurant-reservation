@@ -153,27 +153,3 @@ export async function listTables(params, signal) {
   const url = new URL(`${API_BASE_URL}/tables`);
   return await fetchJson(url, { headers, signal }, []);
 }
-
-//remove res_id from a table "finish the table"
-export async function removeReservationFromTable(table_id, reservation_id, signal) {
-  const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
-  const options = {
-    method: "DELETE",
-    headers,
-    body: JSON.stringify({ data: { reservation_id } }),
-    signal,
-  };
-  return await fetchJson(url, options, []);
-}
-
-//remove res_id from a table "finish the table"
-export async function removeReservationFromTable(table_id, reservation_id, signal) {
-  const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
-  const options = {
-    method: "DELETE",
-    headers,
-    body: JSON.stringify({ data: { reservation_id } }),
-    signal,
-  };
-  return await fetchJson(url, options, []);
-}
