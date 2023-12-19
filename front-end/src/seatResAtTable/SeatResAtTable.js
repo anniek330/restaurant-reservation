@@ -11,10 +11,18 @@ function SeatResAtTable() {
   const [tableToBeSelected, setTableToBeSelected] = useState(null);
   const [error, setError] = useState(null);
 
-  //get tables from database
   useEffect(() => {
-    listTables().then((data) => setTables(data));
+    setError(null);
+    const abortController = new AbortController();
+    listTables(abortController.signal).then(setTables).catch(setError);
+    return () => abortController.abort();
   }, []);
+
+
+  //get tables from database
+  // useEffect(() => {
+  //   listTables().then((data) => setTables(data));
+  // }, []);
 
   function handleCancelClick() {
     history.goBack(); // cancel button redirects to previous page
