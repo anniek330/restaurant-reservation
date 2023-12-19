@@ -94,7 +94,7 @@ function Form({ onSubmit, onCancel, initialFormData }) {
 
             {/* mobile input box-telephone */}
             <input
-              type="tel"
+              type="number"
               id="mobile_number"
               name="mobile_number"
               className="form-control"
