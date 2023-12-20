@@ -102,8 +102,8 @@ function Form({ onSubmit, onCancel, initialFormData }) {
               value={formData.mobile_number}
               required
               placeholder="012-345-6789"
-              // pattern = "[0-9]{3}-[0-9]{3}-[0-9]{4}"
-              // title="Please enter only numeric characters"
+              pattern = "^[0-9 \-]+$"
+              title="Please enter only numeric characters"
               onChange={handleChange}
             />
           </div>
