@@ -45,6 +45,7 @@ function Form({ onSubmit, onCancel, initialFormData }) {
     }
   };
 
+ 
   return (
     <div>
       <ErrorAlert error={reservationError} />
@@ -97,12 +98,12 @@ function Form({ onSubmit, onCancel, initialFormData }) {
               type="tel"
               id="mobile_number"
               name="mobile_number"
-              pattern="[0-9]+"
-              title="Please enter only numeric characters"
               className="form-control"
               value={formData.mobile_number}
               required
-              placeholder="Mobile Number"
+              placeholder="012-345-6789"
+              // pattern = "[0-9]{3}-[0-9]{3}-[0-9]{4}"
+              // title="Please enter only numeric characters"
               onChange={handleChange}
             />
           </div>
@@ -139,6 +140,7 @@ function Form({ onSubmit, onCancel, initialFormData }) {
               value={formData.reservation_date}
               required
               placeholder="YYYY-MM-DD"
+              pattern="\d{4}-\d{2}-\d{2}"
               onChange={handleChange}
             />
           </div>
@@ -157,6 +159,7 @@ function Form({ onSubmit, onCancel, initialFormData }) {
               value={formData.reservation_time}
               required
               placeholder="HH:MM"
+              pattern="[0-9]{2}:[0-9]{2}"
               onChange={handleChange}
             />
           </div>

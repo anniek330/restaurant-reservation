@@ -77,7 +77,7 @@ function validateTimeField(req, res, next) {
       if (!validateTime(data[field])) {
         return next({
           status: 400,
-          message: `reservation_time: ${data[field]} is not a valid time.`,
+          message: `reservation_time must be after 10:30 and before 21:30.`,
         });
       }
     }
@@ -91,7 +91,7 @@ function validateDateField(req, res, next) {
       if (!Date.parse(data[field])) {
         return next({
           status: 400,
-          message: `reservation_date: ${data[field]} is not a valid date.`,
+          message: `reservation_date: ${data[field]} must be in the future.`,
         });
       }
     }
