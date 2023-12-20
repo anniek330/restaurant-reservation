@@ -24,7 +24,8 @@ function ReservationCard({
       <div className="card" key={reservation.reservation_id}>
         <div className="card-body">
           <h4 className="card-title">
-            Reservation for: {`${reservation.first_name} ${reservation.last_name}`}
+            Reservation for:{" "}
+            {`${reservation.first_name} ${reservation.last_name}`}
           </h4>
 
           <div className="card-text">
@@ -44,19 +45,20 @@ function ReservationCard({
         <div className="card-buttons">
           {reservation.status === "booked" && (
             <a
-            className="btn btn-primary"
-            href={`/reservations/${reservation.reservation_id}/seat`}
-          >
-            Seat
-          </a>
+              className="btn btn-primary"
+              href={`/reservations/${reservation.reservation_id}/seat`}
+            >
+              Seat
+            </a>
           )}
-          <a
-            className="btn btn-primary"
-            href={`/reservations/${reservation.reservation_id}/edit`}
-          >
-            Edit
-          </a>
-
+          {reservation.status === "booked" && (
+            <a
+              className="btn btn-primary"
+              href={`/reservations/${reservation.reservation_id}/edit`}
+            >
+              Edit
+            </a>
+          )}
           <button
             className="btn btn-danger"
             onClick={() => handleCancel(reservation.reservation_id)}
