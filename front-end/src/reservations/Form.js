@@ -94,9 +94,11 @@ function Form({ onSubmit, onCancel, initialFormData }) {
 
             {/* mobile input box-telephone */}
             <input
-              type="number"
+              type="tel"
               id="mobile_number"
               name="mobile_number"
+              pattern="[0-9]+"
+              title="Please enter only numeric characters"
               className="form-control"
               value={formData.mobile_number}
               required
