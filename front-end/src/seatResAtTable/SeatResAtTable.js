@@ -18,7 +18,6 @@ function SeatResAtTable() {
     return () => abortController.abort();
   }, []);
 
-
   //get tables from database
   // useEffect(() => {
   //   listTables().then((data) => setTables(data));
@@ -70,15 +69,22 @@ function SeatResAtTable() {
           </fieldset>
 
           <div>
-              <button className= "btn btn-primary" type="submit" onClick={handleSubmit}>
+            <button
+              className="btn btn-primary"
+              type="submit"
+              onClick={handleSubmit}
+            >
               Submit
             </button>
-            
-            <button className= "btn btn-danger" type="button" onClick={handleCancelClick}>
+
+            <button
+              className="btn btn-danger"
+              type="button"
+              onClick={handleCancelClick}
+            >
               Cancel
             </button>
           </div>
-
         </form>
       </div>
     </>
